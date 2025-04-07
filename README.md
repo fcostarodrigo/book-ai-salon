@@ -44,7 +44,7 @@ Slot
 
 Booking
 
-- Service types
+- Service type
 - Customer
 - Slot
 

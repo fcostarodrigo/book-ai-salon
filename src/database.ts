@@ -1,120 +1,94 @@
 import { Database } from "bun:sqlite";
+import type { Booking, Service, Studio, Stylist, User } from "./model";
 
-const db = new Database("database.sqlite", { create: true, strict: true });
+const db = new Database("database.sqlite", { strict: true });
 
-const clearDatabase = () => {
-  db.run("DROP TABLE IF EXISTS bookings");
-  db.run("DROP TABLE IF EXISTS users");
-  db.run("DROP TABLE IF EXISTS slots");
-  db.run("DROP TABLE IF EXISTS stylistServices");
-  db.run("DROP TABLE IF EXISTS services");
-  db.run("DROP TABLE IF EXISTS stylists");
-  db.run("DROP TABLE IF EXISTS studios");
+const studiosQuery = db.query("SELECT * FROM studios");
+
+export const getStudios = () => studiosQuery.all();
+
+const stylistsQuery = db.query(`
+  SELECT * FROM stylists
+    LEFT JOIN studios ON stylists.studioId = studios.studioId
+`);
+
+export const getStylists = () => stylistsQuery.all() as (Studio & Stylist)[];
+
+const servicesQuery = db.query("SELECT * FROM services");
+
+export const getServices = () => servicesQuery.all();
+
+const stylistServicesQuery = db.query(`
+  SELECT
+    services.serviceId,
+    services.serviceName
+  FROM stylistServices
+    LEFT JOIN services on stylistServices.serviceId = services.serviceId
+    WHERE stylistId = $styleId
+`);
+
+export const getStylistServices = (styleId: string) => {
+  return stylistServicesQuery.all({ styleId }) as Service[];
 };
 
-const createSchema = () => {
-  db.run(`CREATE TABLE studios (
-    studioId TEXT PRIMARY KEY,
-    name TEXT NOT NULL
-  )`);
+const stylistSlotsQuery = db.query(`
+  SELECT
+    slots.slotId,
+    slots.startTime,
+    slots.endTime
+  FROM slots
+    WHERE stylistId = $styleId
+`);
 
-  db.run(`CREATE TABLE stylists (
-    stylistId TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    studioId TEXT NOT NULL,
-    FOREIGN KEY (studioId) REFERENCES studios(studioId)
-  )`);
+export const getStylistSlots = (styleId: string) => stylistSlotsQuery.all({ styleId });
 
-  db.run(`CREATE TABLE services (
-    serviceId TEXT PRIMARY KEY,
-    name TEXT NOT NULL
-  )`);
+const usersQuery = db.query("SELECT * FROM users");
 
-  db.run(`CREATE TABLE stylistServices (
-    stylistId TEXT NOT NULL,
-    serviceId TEXT NOT NULL,
-    PRIMARY KEY (stylistId, serviceId),
-    FOREIGN KEY (stylistId) REFERENCES stylists(stylistId),
-    FOREIGN KEY (serviceId) REFERENCES services(serviceId)
-  )`);
+export const getUsers = () => usersQuery.all();
 
-  db.run(`CREATE TABLE slots (
-    slotId TEXT PRIMARY KEY,
-    stylistId TEXT NOT NULL,
-    startTime TEXT NOT NULL,
-    endTime TEXT NOT NULL,
-    FOREIGN KEY (stylistId) REFERENCES stylists(stylistId)
-  )`);
+const createUserQuery = db.query(`
+  INSERT INTO users (userId, userName) VALUES ($userId, $userName)
+`);
 
-  db.run(`CREATE TABLE users (
-    userId TEXT PRIMARY KEY,
-    name TEXT NOT NULL
-  )`);
+export const createUser = (user: User) => createUserQuery.get({ ...user });
 
-  db.run(`CREATE TABLE bookings (
-    bookingId TEXT PRIMARY KEY,
-    slotId TEXT NOT NULL,
-    userId TEXT NOT NULL,
-    FOREIGN KEY (slotId) REFERENCES slots(slotId),
-    FOREIGN KEY (userId) REFERENCES users(userId)
-  )`);
+const slotsQuery = db.query(`
+  SELECT
+    slots.slotId,
+    slots.startTime,
+    slots.endTime,
+    stylists.stylistId,
+    stylists.stylistName,
+    studios.studioId,
+    studios.studioName,
+    services.serviceId,
+    services.serviceName
+  FROM slots
+    LEFT JOIN stylists ON slots.stylistId = stylists.stylistId
+    LEFT JOIN studios ON stylists.studioId = studios.studioId
+    LEFT JOIN stylistServices ON slots.stylistId = stylistServices.stylistId
+    LEFT JOIN services ON services.serviceId = stylistServices.serviceId
+  WHERE
+    (startTime >= $start AND endTime <= $end)
+`);
+
+export const getSlots = ({ start = "2000-01-01T00:00:00", end = "3000-01-01T00:00:00" }) => {
+  return slotsQuery.all({ start, end });
 };
 
-const populateDatabase = () => {
-  db.run(`INSERT INTO studios (studioId, name) VALUES 
-    ('studio-1', 'Shear Bliss'),
-    ('studio-2', 'The Strand Studio')
-  `);
+const bookingsQuery = db.query("SELECT * FROM bookings");
 
-  db.run(`INSERT INTO stylists (stylistId, name, studioId) VALUES
-    ('stylist-1', 'Ava Riley', 'studio-1'),
-    ('stylist-2', 'Ethan Walker', 'studio-1'),
-    ('stylist-3', 'Chloe Bennett', 'studio-2'),
-    ('stylist-4', 'Liam Murphy', 'studio-2')
-  `);
+export const getBookings = () => bookingsQuery.all();
 
-  db.run(`INSERT INTO services (serviceId, name) VALUES
-    ('service-1', 'Haircut'),
-    ('service-2', 'Coloring'),
-    ('service-3', 'Highlight'),
-    ('service-4', 'Styling')
-  `);
+const createBookingQuery = db.query(`
+  INSERT INTO bookings (bookingId, slotId, userId, serviceId) VALUES
+    ($bookingId, $slotId, $userId, $serviceId)
+`);
 
-  db.run(`INSERT INTO stylistServices (stylistId, serviceId) VALUES
-    ('stylist-1', 'service-1'),
-    ('stylist-1', 'service-2'),
-    ('stylist-1', 'service-3'),
-    ('stylist-1', 'service-4'),
-    ('stylist-2', 'service-1'),
-    ('stylist-3', 'service-1'),
-    ('stylist-3', 'service-2'),
-    ('stylist-3', 'service-3'),
-    ('stylist-3', 'service-4'),
-    ('stylist-4', 'service-1')
-  `);
+export const createBooking = (booking: Booking) => createBookingQuery.get({ ...booking });
 
-  db.run(`INSERT INTO slots (slotId, stylistId, startTime, endTime) VALUES
-    ('slot-1', 'stylist-1', '2024-03-01T10:00:00', '2024-03-01T11:00:00'),
-    ('slot-2', 'stylist-1', '2024-03-01T11:00:00', '2024-03-01T12:00:00'),
-    ('slot-3', 'stylist-2', '2024-03-01T10:00:00', '2024-03-01T11:00:00'),
-    ('slot-4', 'stylist-3', '2024-03-01T10:00:00', '2024-03-01T11:00:00'),
-    ('slot-5', 'stylist-3', '2024-03-01T11:00:00', '2024-03-01T12:00:00'),
-    ('slot-6', 'stylist-4', '2024-03-01T10:00:00', '2024-03-01T11:00:00')
-  `);
+const removeBookingQuery = db.query(`
+  DELETE FROM bookings WHERE bookingId = $bookingId
+`);
 
-  db.run(`INSERT INTO users (userId, name) VALUES
-    ('user-1', 'John Doe'),
-    ('user-2', 'Jane Smith')
-  `);
-
-  db.run(`INSERT INTO bookings (bookingId, slotId, userId) VALUES
-    ('booking-1', 'slot-1', 'user-1'),
-    ('booking-2', 'slot-3', 'user-2')
-  `);
-};
-
-export const initDatabase = () => {
-  clearDatabase();
-  createSchema();
-  populateDatabase();
-};
+export const removeBooking = (bookingId: string) => removeBookingQuery.get({ bookingId });

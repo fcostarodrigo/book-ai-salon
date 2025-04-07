@@ -113,9 +113,10 @@ code {
 }
 
 .endpoint-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: 2rem auto;
+  gap: 0.7rem;
   background: #1a1a1a;
   padding: 0.75rem;
   border-radius: 12px;
@@ -131,6 +132,7 @@ code {
 }
 
 .method {
+  grid-area: 1 / 1 / 2 / 2;
   background: #fbf0df;
   color: #1a1a1a;
   padding: 0.3rem 0.7rem;
@@ -150,6 +152,7 @@ code {
 }
 
 .url-input {
+  grid-area: 1 / 2 / 2 / 3;
   width: 100%;
   flex: 1;
   background: 0;
@@ -169,6 +172,7 @@ code {
 }
 
 .send-button {
+  grid-area: 1 / 3 / 2 / 4;
   background: #fbf0df;
   color: #1a1a1a;
   border: 0;
@@ -183,6 +187,20 @@ code {
   background: #f3d5a3;
   transform: translateY(-1px);
   cursor: pointer;
+}
+
+.body-input {
+  grid-area: 2 / 1 / 3 / 4;
+  width: 100%;
+  min-height: 120px;
+  background: #1a1a1a;
+  border: 2px solid #fbf0df;
+  border-radius: 12px;
+  padding: 0.75rem;
+  color: #fbf0df;
+  font: monospace;
+  resize: vertical;
+  box-sizing: border-box;
 }
 
 .response-area {
