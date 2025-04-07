@@ -1,37 +1,62 @@
+import { useAtom } from "jotai";
 import { useState } from "react";
 import { FaMicrophone } from "react-icons/fa";
+import { transcriptionResponse } from "@/model";
+import { queryAtom, statusAtom } from "./atoms";
 
 export const MicButton = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
-  const [status, setStatus] = useState<"inactive" | "recording">("inactive");
+  const [, setQuery] = useAtom(queryAtom);
+  const [, setStatus] = useAtom(statusAtom);
 
   const handleClick = () => {
     if (mediaRecorder === undefined) {
-      setStatus("recording");
       navigator.mediaDevices
         .getUserMedia({ audio: true })
         .then((stream) => {
           const newMediaRecorder = new MediaRecorder(stream);
+          const chunks: Blob[] = [];
 
           setMediaRecorder(newMediaRecorder);
-          newMediaRecorder.addEventListener("dataavailable", () => {
-            // TODO: Send to the server, get text, set text to the text input field.
-            console.log("Recording");
+          newMediaRecorder.addEventListener("dataavailable", (event) => {
+            if (event.data.size > 0) {
+              chunks.push(event.data);
+            }
           });
+
+          newMediaRecorder.addEventListener("stop", () => {
+            const blob = new Blob(chunks, { type: "audio/webm" });
+            const formData = new FormData();
+
+            formData.append("file", blob, "message.webm");
+
+            setStatus("loading");
+            fetch("/api/transcriptions", {
+              method: "POST",
+              body: formData,
+            })
+              .then((response) => response.json())
+              .then((responseBody) => {
+                const { transcription } = transcriptionResponse.parse(responseBody);
+
+                setQuery(transcription);
+                setStatus("loaded");
+              })
+              .catch(console.error);
+          });
+
+          newMediaRecorder.start();
         })
         .catch(console.error);
-    } else if (status === "inactive") {
-      setStatus("recording");
-      mediaRecorder.start();
     } else {
-      setStatus("inactive");
       mediaRecorder.stop();
+      setMediaRecorder(undefined);
     }
   };
 
   const classes = ["shadow"];
 
-  if (status === "recording") {
+  if (mediaRecorder !== undefined) {
     classes.push("recording");
   }
 

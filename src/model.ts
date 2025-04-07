@@ -82,3 +82,7 @@ export interface Prompt {
   response: string;
   conversationId: string;
 }
+
+export const transcriptionResponse = z.object({
+  transcription: z.string(),
+});

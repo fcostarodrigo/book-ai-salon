@@ -235,3 +235,13 @@ export const prompt = async (conversation: ConversationItem[]) => {
 
   return response.output_text;
 };
+
+export const transcribe = async (file: File) => {
+  const transcription = await openai.audio.transcriptions.create({
+    file,
+    model: "gpt-4o-mini-transcribe",
+    response_format: "text",
+  });
+
+  return transcription;
+};

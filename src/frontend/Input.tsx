@@ -2,14 +2,14 @@ import { useAtom } from "jotai";
 import { useState } from "react";
 import { FiSend } from "react-icons/fi";
 import { promptResponseSchema } from "@/model";
-import { promptsAtom } from "./atoms";
+import { promptsAtom, queryAtom, statusAtom } from "./atoms";
 import { MicButton } from "./MicButton";
 
 export const Input = () => {
   const [prompts, setPrompts] = useAtom(promptsAtom);
   const [conversationId, setConversationId] = useState<string | undefined>();
-  const [status, setStatus] = useState<"loading" | "initial" | "loaded">("initial");
-  const [query, setQuery] = useState("");
+  const [status, setStatus] = useAtom(statusAtom);
+  const [query, setQuery] = useAtom(queryAtom);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setQuery(event.target.value);

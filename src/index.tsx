@@ -1,5 +1,5 @@
 import { serve } from "bun";
-import { type ConversationItem, prompt } from "./backend/ai";
+import { type ConversationItem, prompt, transcribe } from "./backend/ai";
 import {
   createBooking,
   createPrompt,
@@ -106,6 +106,21 @@ const server = serve({
         removeBooking(bookingId);
 
         return Response.json({ bookingId });
+      },
+    },
+
+    "/api/transcriptions": {
+      async POST(req) {
+        const formData = await req.formData();
+        const file = formData.get("file");
+
+        if (!(file instanceof File)) {
+          return new Response("No file uploaded", { status: 400 });
+        }
+
+        const transcription = await transcribe(file);
+
+        return Response.json({ transcription });
       },
     },
 
