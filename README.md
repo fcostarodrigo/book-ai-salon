@@ -6,6 +6,7 @@ This is a draft project created to practice skills in AI and voice interface dev
 
 - Install bun: https://bun.sh/docs/installation
 - Run: `bun install`
+- Run: `bun run init`
 
 ## Usage
 
@@ -22,9 +23,9 @@ This is a draft project created to practice skills in AI and voice interface dev
 - Rescheduling.
 - Cancellations.
 
-## Domain modal
+## Domain model
 
-![Domain modal diagram](docs/domain.drawio.svg)
+![Domain model diagram](docs/domain.drawio.svg)
 
 Studio
 
@@ -54,7 +55,9 @@ Customer
 
 ## Stack
 
-- [Bun](https://bun.sh/): Simple modern alternative for [Node.js](https://nodejs.org/). It comes with all the features that I need for this project, a web server with modern features that I can use for the frontend and API with routing and SQLite that I can use for the backend. It also comes with a test runner in case I need to write unit tests.
+- [Bun](https://bun.sh/): Simple modern alternative for [Node.js](https://nodejs.org/). It comes with all the features that I need for this project, a web server with modern features that I can use for the frontend and API with routing and SQLite driver that I can use for the backend. It also comes with a test runner in case I need to write unit tests.
+
+- [SQLite](https://sqlite.org/): Simple SQL database.
 
 - [MCP Server](https://modelcontextprotocol.io/): Recent standard to allow agents to use tools and resources. In this case, manage bookings.
 
