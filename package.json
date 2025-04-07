@@ -16,9 +16,11 @@
   },
   "dependencies": {
     "jotai": "^2.12.2",
+    "openai": "^4.92.0",
     "react": "^19",
     "react-dom": "^19",
     "react-icons": "^5.5.0",
+    "react-markdown": "^10.1.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {

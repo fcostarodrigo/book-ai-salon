@@ -1,8 +1,11 @@
 import { serve } from "bun";
+import { type ConversationItem, prompt } from "./backend/ai";
 import {
   createBooking,
+  createPrompt,
   createUser,
   getBookings,
+  getPrompts,
   getServices,
   getSlots,
   getStudios,
@@ -11,9 +14,9 @@ import {
   getStylistSlots,
   getUsers,
   removeBooking,
-} from "./database";
+} from "./backend/database";
 import index from "./frontend/index.html";
-import { newBookingSchema, newUserSchema } from "./model";
+import { newBookingSchema, newUserSchema, promptRequestSchema } from "./model";
 
 const server = serve({
   routes: {
@@ -108,10 +111,27 @@ const server = serve({
 
     "/api/prompt": {
       async POST(req) {
-        const { query } = await req.json();
-        const queryId = crypto.randomUUID();
+        const { query, conversationId } = promptRequestSchema.parse(await req.json());
+        const conversation: ConversationItem[] = [];
 
-        return Response.json({ query, queryId });
+        if (conversationId !== undefined) {
+          for (const savedPrompt of getPrompts(conversationId)) {
+            conversation.push({ query: savedPrompt.query, response: savedPrompt.response });
+          }
+        }
+
+        conversation.push({ query });
+
+        const newPrompt = {
+          promptId: crypto.randomUUID(),
+          query,
+          response: await prompt(conversation),
+          conversationId: conversationId ?? crypto.randomUUID(),
+        };
+
+        createPrompt(newPrompt);
+
+        return Response.json(newPrompt);
       },
     },
   },

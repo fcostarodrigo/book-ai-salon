@@ -1,10 +1,13 @@
-import type { QueryResponse } from "@/model";
+import Markdown from "react-markdown";
+import type { promptResponse } from "@/model";
 
-export const Output = ({ query }: { query: QueryResponse }) => {
+export const Output = ({ prompt }: { prompt: promptResponse }) => {
   return (
     <>
-      <p className="query">{query.query}</p>
-      <p className="output">{query.query}</p>
+      <p className="query">{prompt.query}</p>
+      <p className="output">
+        <Markdown>{prompt.response}</Markdown>
+      </p>
     </>
   );
 };

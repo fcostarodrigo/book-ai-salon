@@ -1,14 +1,14 @@
 import { useAtom } from "jotai";
-import { queriesAtom } from "./atoms";
+import { promptsAtom } from "./atoms";
 import { Output } from "./Output";
 
 export const Outputs = () => {
-  const [queries] = useAtom(queriesAtom);
+  const [prompts] = useAtom(promptsAtom);
 
   return (
     <div className="outputArea">
-      {queries.map((output) => (
-        <Output key={output.queryId} query={output}></Output>
+      {prompts.map((prompt) => (
+        <Output key={prompt.promptId} prompt={prompt}></Output>
       ))}
     </div>
   );

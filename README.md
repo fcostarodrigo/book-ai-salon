@@ -7,6 +7,7 @@ This is a draft project created to practice skills in AI and voice interface dev
 - Install bun: https://bun.sh/docs/installation
 - Run: `bun install`
 - Run: `bun run init`
+- Add environment variable `OPENAI_API_KEY`. `.env` is available.
 
 ## Usage
 
@@ -51,7 +52,10 @@ Booking
 Customer
 
 - Name
-- Payment details
+
+Payment
+
+- Payment token
 
 ## Stack
 
@@ -63,7 +67,7 @@ Customer
 
 - [SQLite](https://sqlite.org/): Simple SQL database.
 
-- [MCP Server](https://modelcontextprotocol.io/): Recent standard to allow agents to use tools and resources. In this case, manage bookings.
+- [OpenAI SDK](https://github.com/openai/openai-node): AI capabilities.
 
 ### Dev tooling
 

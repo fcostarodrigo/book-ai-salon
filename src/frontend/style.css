@@ -59,7 +59,6 @@ h4 {
 }
 
 .output {
-  animation: fadeIn 0.7s ease-in-out;
   text-align: left;
   background: #0000004f;
   align-self: start;
@@ -67,6 +66,7 @@ h4 {
 
 .output,
 .query {
+  animation: fadeIn 0.7s ease-in-out;
   padding: 1rem 2rem;
   border-radius: 32px;
   backdrop-filter: blur(10px);
@@ -117,6 +117,24 @@ h4 {
 
 .inputBox:hover {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 0% 100%;
+  }
+  50% {
+    background-position: 100% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
+
+.inputBox.loading {
+  background: linear-gradient(130deg, #3939394d, #ffffff4d, #3939394d);
+  background-size: 400% 100%;
+  animation: loading 7s linear infinite both;
 }
 
 button {

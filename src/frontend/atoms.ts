@@ -1,4 +1,4 @@
 import { atom } from "jotai";
-import type { QueryResponse } from "@/model";
+import type { promptResponse } from "@/model";
 
-export const queriesAtom = atom<QueryResponse[]>([]);
+export const promptsAtom = atom<promptResponse[]>([]);

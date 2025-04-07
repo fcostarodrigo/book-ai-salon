@@ -9,6 +9,8 @@ db.run("DROP TABLE IF EXISTS stylistServices");
 db.run("DROP TABLE IF EXISTS services");
 db.run("DROP TABLE IF EXISTS stylists");
 db.run("DROP TABLE IF EXISTS studios");
+db.run("DROP TABLE IF EXISTS prompts");
+db.run("DROP TABLE IF EXISTS payments");
 
 db.run(`
   CREATE TABLE studios (
@@ -61,14 +63,34 @@ db.run(`
 `);
 
 db.run(`
+  CREATE TABLE payments (
+    paymentId TEXT PRIMARY KEY,
+    paymentToken TEXT NOT NULL,
+    userId TEXT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES users(userId)
+  )
+`);
+
+db.run(`
   CREATE TABLE bookings (
     bookingId TEXT PRIMARY KEY,
     slotId TEXT NOT NULL,
     userId TEXT NOT NULL,
     serviceId TEXT NOT NULL,
+    paymentId TEXT NOT NULL,
     FOREIGN KEY (slotId) REFERENCES slots(slotId),
     FOREIGN KEY (userId) REFERENCES users(userId),
-    FOREIGN KEY (serviceId) REFERENCES services(serviceId)
+    FOREIGN KEY (serviceId) REFERENCES services(serviceId),
+    FOREIGN KEY (paymentId) REFERENCES payments(paymentId)
+  )
+`);
+
+db.run(`
+  CREATE TABLE prompts (
+    promptId TEXT PRIMARY KEY,
+    query TEXT NOT NULL,
+    response TEXT NOT NULL,
+    conversationId TEXT NOT NULL
   )
 `);
 
@@ -125,7 +147,13 @@ db.run(`
 `);
 
 db.run(`
-  INSERT INTO bookings (bookingId, slotId, userId, serviceId) VALUES
-    ('booking-1', 'slot-1', 'user-1', 'service-1'),
-    ('booking-2', 'slot-3', 'user-2', 'service-1')
+  INSERT INTO payments (paymentId, paymentToken, userId) VALUES
+    ('payment-1', 'payment-token-1', 'user-1'),
+    ('payment-2', 'payment-token-2', 'user-2')  
+`);
+
+db.run(`
+  INSERT INTO bookings (bookingId, slotId, userId, serviceId, paymentId) VALUES
+    ('booking-1', 'slot-1', 'user-1', 'service-1', 'payment-1'),
+    ('booking-2', 'slot-3', 'user-2', 'service-1', 'payment-2')
 `);
