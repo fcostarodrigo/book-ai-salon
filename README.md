@@ -54,6 +54,16 @@ Customer
 
 ## Stack
 
-- [Bun](https://bun.sh/): Simple modern alternative for [Node.js](https://nodejs.org/). It comes with all the features that I need for this project, a web server with modern features that I can use for the frontend and API with routing and SQLite that I can use for the backend.
+- [Bun](https://bun.sh/): Simple modern alternative for [Node.js](https://nodejs.org/). It comes with all the features that I need for this project, a web server with modern features that I can use for the frontend and API with routing and SQLite that I can use for the backend. It also comes with a test runner in case I need to write unit tests.
 
 - [MCP Server](https://modelcontextprotocol.io/): Recent standard to allow agents to use tools and resources. In this case, manage bookings.
+
+### Dev tooling
+
+- [Prettier](https://prettier.io/): Code formatting.
+
+- [Eslint](https://eslint.org/): Linting.
+
+- [Sheriff](https://www.eslint-config-sheriff.dev/): Eslint configuration.
+
+- [Husky](https://typicode.github.io/husky/): Commit hooks.

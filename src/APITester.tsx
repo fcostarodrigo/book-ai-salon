@@ -1,29 +1,36 @@
-import { useRef, type FormEvent } from "react";
+import { type FormEvent, useRef } from "react";
 
-export function APITester() {
+export const APITester = () => {
   const responseInputRef = useRef<HTMLTextAreaElement>(null);
 
-  const testEndpoint = async (e: FormEvent<HTMLFormElement>) => {
+  const testEndpoint = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
-      const form = e.currentTarget;
-      const formData = new FormData(form);
-      const endpoint = formData.get("endpoint") as string;
-      const url = new URL(endpoint, location.href);
-      const method = formData.get("method") as string;
-      const res = await fetch(url, { method });
+    const { current } = responseInputRef;
 
-      const data = await res.json();
-      responseInputRef.current!.value = JSON.stringify(data, null, 2);
-    } catch (error) {
-      responseInputRef.current!.value = String(error);
+    if (current === null) {
+      return;
     }
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const endpoint = formData.get("endpoint") as string;
+    const url = new URL(endpoint, window.location.href);
+    const method = formData.get("method") as string;
+
+    fetch(url, { method })
+      .then((res) => res.json())
+      .then((data) => {
+        current.value = JSON.stringify(data, null, 2);
+      })
+      .catch((error) => {
+        current.value = String(error);
+      });
   };
 
   return (
     <div className="api-tester">
-      <form onSubmit={testEndpoint} className="endpoint-row">
+      <form className="endpoint-row" onSubmit={testEndpoint}>
         <select name="method" className="method">
           <option value="GET">GET</option>
           <option value="PUT">PUT</option>
@@ -40,11 +47,11 @@ export function APITester() {
         </button>
       </form>
       <textarea
-        ref={responseInputRef}
         readOnly
+        ref={responseInputRef}
         placeholder="Response will appear here..."
         className="response-area"
       />
     </div>
   );
-}
+};

@@ -1,10 +1,9 @@
-import { APITester } from "./APITester";
 import "./index.css";
-
+import { APITester } from "./APITester";
 import logo from "./logo.svg";
 import reactLogo from "./react.svg";
 
-export function App() {
+export const App = () => {
   return (
     <div className="app">
       <div className="logo-container">
@@ -19,6 +18,4 @@ export function App() {
       <APITester />
     </div>
   );
-}
-
-export default App;
+};
