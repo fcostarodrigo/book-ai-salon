@@ -1,0 +1,24 @@
+Challenge:
+Transform the way salon bookings are made. Instead of the traditional method, build an AI-powered voice agent that can seamlessly handle bookings with natural voice commands.
+
+Requirements:
+
+Scan available slots in real-time.
+
+Check across multiple staff members and branches/studios.
+
+Understand simple voice commands to determine:
+
+Service type (e.g., haircut, coloring, styling).
+
+Stylist name (if preferred).
+
+Date and time preferences.
+
+Securely handle payment details for a seamless checkout.
+
+Bonus Points:
+
+A natural, human-like conversation flow.
+
+Smooth handling of rescheduling or cancellations.
