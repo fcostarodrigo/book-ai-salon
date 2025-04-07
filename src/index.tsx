@@ -12,7 +12,7 @@ import {
   getUsers,
   removeBooking,
 } from "./database";
-import index from "./index.html";
+import index from "./frontend/index.html";
 import { newBookingSchema, newUserSchema } from "./model";
 
 const server = serve({
@@ -103,6 +103,15 @@ const server = serve({
         removeBooking(bookingId);
 
         return Response.json({ bookingId });
+      },
+    },
+
+    "/api/prompt": {
+      async POST(req) {
+        const { query } = await req.json();
+        const queryId = crypto.randomUUID();
+
+        return Response.json({ query, queryId });
       },
     },
   },

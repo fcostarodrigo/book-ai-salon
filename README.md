@@ -57,6 +57,10 @@ Customer
 
 - [Bun](https://bun.sh/): Simple modern alternative for [Node.js](https://nodejs.org/). It comes with all the features that I need for this project, a web server with modern features that I can use for the frontend and API with routing and SQLite driver that I can use for the backend. It also comes with a test runner in case I need to write unit tests.
 
+- [React](https://react.dev/)
+
+- [Jotai](https://jotai.org/): State management.
+
 - [SQLite](https://sqlite.org/): Simple SQL database.
 
 - [MCP Server](https://modelcontextprotocol.io/): Recent standard to allow agents to use tools and resources. In this case, manage bookings.

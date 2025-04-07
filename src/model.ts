@@ -41,3 +41,10 @@ export interface Booking {
   userId: string;
   serviceId: string;
 }
+
+export const queryResponseSchema = z.object({
+  query: z.string(),
+  queryId: z.string(),
+});
+
+export type QueryResponse = z.infer<typeof queryResponseSchema>;

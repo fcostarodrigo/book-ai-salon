@@ -1,0 +1,172 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  color: white;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-image: url(background.jpeg), linear-gradient(#7e4242, #222252);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-blend-mode: multiply;
+  align-items: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+p,
+h1,
+h2,
+h3,
+h4 {
+  margin: 0rem;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  max-width: 1000px;
+  width: 100%;
+}
+
+.shadow {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.outputArea {
+  flex-grow: 1;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  padding: 2rem;
+  align-items: center;
+  overflow-y: auto;
+  height: 0px;
+  position: relative;
+}
+
+.output {
+  animation: fadeIn 0.7s ease-in-out;
+  text-align: left;
+  background: #0000004f;
+  align-self: start;
+}
+
+.output,
+.query {
+  padding: 1rem 2rem;
+  border-radius: 32px;
+  backdrop-filter: blur(10px);
+}
+
+.query {
+  text-align: right;
+  background: #ffffff4f;
+  align-self: end;
+}
+
+.inputArea {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+  padding: 2rem;
+  transform: translateY(-50vh);
+  transition: transform 0.7s ease;
+  animation: fadeIn 0.7s ease-in-out;
+}
+
+.inputArea.sent {
+  transform: translateY(0px);
+}
+
+.inputArea > p {
+  color: white;
+}
+
+.inputBoxArea {
+  display: flex;
+  justify-content: center;
+}
+
+.inputBox {
+  flex-grow: 1;
+  padding: 1rem 2rem;
+  border-radius: 32px;
+  background: #ffffff4f;
+  backdrop-filter: blur(10px);
+  max-width: 720px;
+  display: flex;
+  gap: 1rem;
+}
+
+.inputBox:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+button {
+  appearance: none;
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+
+  background-color: rgba(255, 255, 255, 0.651);
+  color: rgb(40, 40, 40);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: white;
+  transform: translateY(-3px);
+}
+
+.prompt {
+  flex-grow: 1;
+  appearance: none;
+  border: none;
+  padding: 0.3rem;
+  margin: 0;
+  font-size: inherit;
+  font-family: inherit;
+  color: white;
+  background-color: transparent;
+  box-shadow: none;
+  outline: none;
+}
+
+.prompt::placeholder {
+  color: rgba(255, 255, 255, 0.473);
+  opacity: 1;
+}
+
+.recording {
+  color: #983434;
+}
